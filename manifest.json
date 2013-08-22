@@ -1,23 +1,47 @@
 {
   "name":           "NewRelic + Airbrake for Google Chrome™",
   "description":    "__MSG_ext_desc__",
-  "version":        "0.6.0",
+  "version":        "0.6.0.1",
+  "manifest_version": 2,
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "default_locale": "en",
-  "icons": { "16":  "/images/icons/app-16.jpg",
-             "48":  "/images/icons/app-48.jpg",
-             "128": "/images/icons/app-128.jpg" },
+  "icons": { 
+    "16":  "/images/icons/app-16.png",
+    "19":  "/images/icons/app-19.png",
+    "38":  "/images/icons/app-38.png",
+    "48":  "/images/icons/app-48.png",
+    "128": "/images/icons/app-128.png" 
+  },
 
   "browser_action": {
-    "default_icon": "/images/icons/app-16.jpg",
-    "popup":        "/screens/hud.html"
+    "default_icon": { 
+      "16":  "/images/icons/app-16.png",
+      "19":  "/images/icons/app-19.png",
+      "38":  "/images/icons/app-38.png",
+      "48":  "/images/icons/app-48.png",
+      "128": "/images/icons/app-128.png" 
+    },
+    "default_title": "NewRelic + Airbrake for Google Chrome",
+    "default_popup": "/screens/hud.html"
   },
-  "background_page": "/daemon.html",
+
+  "background": {
+    "page": "/daemon.html"
+  },
+
   "options_page": "/screens/config.html",
+  
+  "web_accessible_resources": [
+    "/images/icn-danger-1.png",
+    "/images/icn-danger-2.png"
+  ],
+
   "permissions": [
     "notifications",
     "https://rpm.newrelic.com/",
     "https://*.airbrake.io/*",
-    "https://*.hoptoadapp.com/*"
+    "https://*.hoptoadapp.com/*",
+    "http://localhost/*"
   ]
 }
 

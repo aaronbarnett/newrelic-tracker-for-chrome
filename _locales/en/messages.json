@@ -49,6 +49,15 @@
   },
 
   "error_tracking_account_name": {
+  "message": "$TRACKING_SERVICE$ subdomain",
+    "placeholders": {
+      "tracking_service": {
+        "content": "Airbrake"
+      }
+    }
+  },
+
+  "error_tracking_account_name": {
 	"message": "$TRACKING_SERVICE$ subdomain",
     "placeholders": {
       "tracking_service": {
@@ -58,7 +67,16 @@
   },
 
   "error_tracking_auth_token": {
-	"message": "$TRACKING_SERVICE$ auth token (account level)",
+  "message": "$TRACKING_SERVICE$ auth token (account level)",
+    "placeholders": {
+      "tracking_service": {
+        "content": "Airbrake"
+      }
+    }
+  },
+
+  "error_rails_env_filter": {
+	"message": "$TRACKING_SERVICE$ Rails.env filter",
     "placeholders": {
       "tracking_service": {
         "content": "Airbrake"

@@ -3,26 +3,28 @@
 <html>
   <head>
     <title>Heads-Up Display</title>
-    <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js' type='text/javascript'></script> 
+    <script src='/lib/jquery-1.10.2.min.js' type='text/javascript'></script> 
     <script src='/js/utils.js' type='text/javascript'></script> 
-    <script src='/js/versions.js' type='text/javascript'></script> 
-    <script>
+    <script src='/js/versions.js' type='text/javascript'></script>
+    <script src='/js/hud.js' type='text/javascript'></script> 
+    <!-- script>
       $(document).ready(function() {
         setup_ux();
         NEWRELIC.display_all_app_stats();
       });
 
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', get_ga_account_id() ]);
-      _gaq.push(['_setCustomVar', 1, 'ext-version',  ext_version, SESSION_SCOPE ]);
-      _gaq.push(['_setCustomVar', 2, 'git-version',  git_version, SESSION_SCOPE ]);
-      if( NEWRELIC.api_key() )
-        _gaq.push(['_setCustomVar', 3, 'has-newrelic', 1, SESSION_SCOPE ]);
-      if( AIRBRAKE.auth_token() )
-        _gaq.push(['_setCustomVar', 4, 'has-airbrake',  1, SESSION_SCOPE ]);
-      _gaq.push(['_trackPageview']);
+      // var _gaq = _gaq || [];
+      // _gaq.push(['_setAccount', get_ga_account_id() ]);
+      // _gaq.push(['_setCustomVar', 1, 'ext-version',  ext_version, SESSION_SCOPE ]);
+      // _gaq.push(['_setCustomVar', 2, 'git-version',  git_version, SESSION_SCOPE ]);
+      // if( NEWRELIC.api_key() )
+      //   _gaq.push(['_setCustomVar', 3, 'has-newrelic', 1, SESSION_SCOPE ]);
+      // if( AIRBRAKE.auth_token() )
+      //   _gaq.push(['_setCustomVar', 4, 'has-airbrake',  1, SESSION_SCOPE ]);
+      // _gaq.push(['_trackPageview']);
     </script>
-    <script src='/js/mini-ssl-ga.js' type='text/javascript'></script> 
+    <script src='/js/mini-ssl-ga.js' type='text/javascript'></script -->
+
     <link href="/screens/theme.css" rel="stylesheet" type="text/css"> 
   </head>
   <body>

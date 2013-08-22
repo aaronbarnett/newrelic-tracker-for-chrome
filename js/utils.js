@@ -42,20 +42,21 @@ var AIRBRAKE = {
   seen_error: function( id ) {
     var airbrake_cache = airbrake_cache || this.build_cache();
     if( $.inArray( id, airbrake_cache ) != -1 )
-      return id;
+     return id;
     else {
-      airbrake_cache.push( id );
-      localStorage["airbrake_cache"] = airbrake_cache.join(' ');
-      return;
+       airbrake_cache.push( id );
+       localStorage["airbrake_cache"] = airbrake_cache.join(' ');
+       return;
     }
   },
 
   display_new_errors: function( xhr ) {
     if( xhr.readyState != 4 ) return;
-    if( xhr.status != 200 ) { c( "error! - " + xhr.status ); return; } // FIXME: handle / bubble up error
+    if( xhr.status != 200 ) { c( "display_new_errors: error! - " + xhr.status ); return; } // FIXME: handle / bubble up error
 
     var errors = $(xhr.responseXML).find( "groups" ).find( "group" );
     var errors_skipped = 0;
+    
     $.each( errors, function( i, error ) {
       if( !AIRBRAKE.seen_error( $(error).find( "id" ).text()))
         AIRBRAKE.display_error( error );
@@ -67,15 +68,27 @@ var AIRBRAKE = {
 
   display_error: function( e ) {
     var e = $(e);
+    var env_filter = localStorage['rails_env_filter']
 
-    var link_to_error =
-      this.api_endpoint.replace( /ACCOUNT_NAME/, this.account_name() )
-      + "errors/" + e.find( "id" ).text();
-    var qs = "link=" + escape( link_to_error);
+    // var link_to_error =
+    //   this.api_endpoint.replace( /ACCOUNT_NAME/, this.account_name() )
+    //   + "errors/" + e.find( "id" ).text();
+    //var qs = "link=" + escape( link_to_error);
+    var map = {}
 
     // marshall the good bits from the XHR response object to query string
-    $.each( this.response_slots, function(i,v) { qs += "&" + v + "=" + escape( e.find( v ).text() )});
-    webkitNotifications.createHTMLNotification( "/screens/notification.html?" + qs ).show();
+    $.each( this.response_slots, function(i,v) { 
+      //qs += "&" + v + "=" + escape( e.find( v ).text() )
+      map[ v ]= e.find( v ).text()
+    });
+    
+    //notifyer = "/screens/notification.html?" + qs
+    //webkitNotifications.createHTMLNotification( notifyer ).show();
+
+    if ( !env_filter || env_filter == map['rails-env'] ){
+      var teaser = map['rails-env'] +' '+ map['most-recent-notice-at']
+      webkitNotifications.createNotification("/images/icn-danger-1.png", map['error-message'], teaser ).show();
+    }
   },
 
   render_error: function() {
@@ -164,7 +177,7 @@ var NEWRELIC = {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function( x ) {
       if( xhr.readyState != 4 ) return;
-      if( xhr.status != 200 ) { c( "error! - " + xhr.status ); return; }
+      if( xhr.status != 200 ) { c( "display_all_app_stats: error! - " + xhr.status ); return; }
       $("#hud").empty();
       $("#hud").append( xhr.responseText );
     }
@@ -175,7 +188,7 @@ var NEWRELIC = {
 
   process_stats: function( xhr ) {
     if( xhr.readyState != 4 ) return;
-    if( xhr.status != 200 ) { c( "error! - " + xhr.status ); return; } // FIXME: handle / bubble up error
+    if( xhr.status != 200 ) { c( "process_stats: error! - " + xhr.status ); return; } // FIXME: handle / bubble up error
 
     var apdex =
       $(xhr.responseXML).
@@ -261,59 +274,6 @@ function localize() {
     });
   });
   c( "localized " + localized_elements + " element(s)");
-}
-
-function setup_ux() {
-  if( !NEWRELIC.api_key()) {
-    $("#hud").hide();
-    $("#footer").hide();
-    $("#welcome").show();
-  } else {
-    $("#hud").show();
-    $("#footer").show();
-    $("#welcome").hide();
-  }
-  localize();
-}
-
-function persist_fields( a ) {
-  while( f = a.shift() ) { persist_field( f ); }
-}
-
-function persist_field( f ) {
-  var val = $("#" + f).val();
-  if( val && val != localStorage[f] ) {
-    localStorage[f] = val;
-    c( "display feedback that " + val + " was saved successfully to " + f + " in local storage" ); // FIXME
-  }
-}
-
-function persist_select( s ) {
-  var val = $('#' + s + ' option:selected').val();
-  if( val && val != localStorage[s] ) {
-    c( "menu was: " + $('#' + s + ' option:selected').val());
-    localStorage[s] = val;
-    c( "display feedback that " + val + " was saved successfully to " + s + " local storage" ); // FIXME
-  }
-}
-
-function save_options() {
-  persist_fields( ["newrelic_api_key", "airbrake_account_name", "airbrake_auth_token"] );
-  persist_select( "newrelic_primary_app" )
-  window.close();
-}
-
-function restore_field( f ) {
-  var val = localStorage[f];
-  $("#" + f ).val( val );
-  return val;
-}
-
-function restore_options() {
-  if( restore_field( "newrelic_api_key" ))
-    NEWRELIC.fetch_and_display_app_stats( NEWRELIC.parse_apps_and_populate_pulldown );
-  restore_field( "airbrake_account_name" );
-  restore_field( "airbrake_auth_token" );
 }
 
 function get_param(name) {
